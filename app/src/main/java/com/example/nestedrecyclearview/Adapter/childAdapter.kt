@@ -4,22 +4,27 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.example.nestedrecyclearview.R
 import com.example.nestedrecyclearview.dataClasses.childRecyclerView
 import com.example.nestedrecyclearview.databinding.ChildRecyclerViewLayoutBinding
 
-class childAdapter(private val SongsData: List<childRecyclerView>) : RecyclerView.Adapter<childAdapter.ViewHolder>() {
+class childAdapter(private val songsData: List<childRecyclerView>) : RecyclerView.Adapter<childAdapter.ViewHolder>() {
 
     inner class ViewHolder(val binding: ChildRecyclerViewLayoutBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(position: Int) {
-            val song = SongsData[position]
-            Log.d("childAdapter", "Binding position: $position with data: $song")
+            val song = songsData[position]
+            Log.d("ChildAdapter", "Binding position: $position with data: $song")
 
-            // Check if the image resource is valid
-            if (song.SongImage != 0) {
-                //binding.SongImage.setImageResource(song.SongImage)
-            } else {
-                Log.e("childAdapter", "Invalid image resource ID at position $position")
-            }
+            // Load the image efficiently using Glide
+            Glide.with(binding.SongImage.context)
+                .load(song.SongImage)
+                .placeholder(R.drawable.one)  // Placeholder image while loading
+                .error(R.drawable.one)  // Error image if loading fails
+                .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache all versions of the image
+                .override(200, 200)  // Resize the image to reduce memory usage
+                .into(binding.SongImage)
 
             binding.SongName.text = song.SongName
         }
@@ -30,9 +35,10 @@ class childAdapter(private val SongsData: List<childRecyclerView>) : RecyclerVie
         return ViewHolder(binding)
     }
 
-    override fun getItemCount(): Int = SongsData.size
+    override fun getItemCount(): Int = songsData.size
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(position)
     }
 }
+
