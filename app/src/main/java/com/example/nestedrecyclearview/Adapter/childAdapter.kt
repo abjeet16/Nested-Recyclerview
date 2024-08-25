@@ -16,7 +16,7 @@ class childAdapter(private val SongsData: List<childRecyclerView>) : RecyclerVie
 
             // Check if the image resource is valid
             if (song.SongImage != 0) {
-                binding.SongImage.setImageResource(song.SongImage)
+                //binding.SongImage.setImageResource(song.SongImage)
             } else {
                 Log.e("childAdapter", "Invalid image resource ID at position $position")
             }
